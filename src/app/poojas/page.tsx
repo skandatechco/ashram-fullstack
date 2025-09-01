@@ -1,6 +1,13 @@
 // File: app/poojas/page.tsx (or a client component with some tweaks)
-
 import { fetchFromStrapi } from "@/src/lib/api";
+
+type Pooja = {
+  id: number;
+  attributes: {
+    Text: string;
+    Number: number;
+  };
+};
 
 export default async function PoojasPage() {
   const { data } = await fetchFromStrapi("poojas?populate=*");
@@ -9,7 +16,7 @@ export default async function PoojasPage() {
     <div>
       <h1>Poojas</h1>
       <ul>
-        {data.map((pooja: any) => (
+        {data.map((pooja: Pooja) => (
           <li key={pooja.id}>
             {pooja.attributes.Text} - {pooja.attributes.Number}
           </li>
