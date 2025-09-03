@@ -8,6 +8,21 @@ import BookingWidget from "@/src/components/BookingWidget";
 import EventCalendar from "@/src/components/EventCalendar";
 
 export default function ShowcasePage() {
+  // Map sampleEvents -> [{ attributes: { ... } }]
+  // Adjust the inner fields if your EventCalendar needs a different attribute set.
+  const calendarEvents = sampleEvents.map((e) => ({
+    attributes: {
+      id: e.id,
+      title: e.title,
+      description: e.description,
+      start: e.start, // ISO string
+      end: e.end,     // ISO string
+      location: e.location,
+      tags: e.tags ?? [],
+      coverImage: e.coverImage ?? null,
+    },
+  }));
+
   return (
     <main className="min-h-screen bg-white">
       {/* Hero */}
@@ -55,11 +70,16 @@ export default function ShowcasePage() {
         <div className="mx-auto max-w-7xl px-6 py-12">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-semibold text-gray-900">Upcoming Events</h2>
-            <Link href="/events" className="text-blue-600 hover:underline">See all</Link>
+            <Link href="/events" className="text-blue-600 hover:underline">
+              See all
+            </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {sampleEvents.map((e) => (
-              <div key={e.id} className="border rounded-2xl overflow-hidden bg-white shadow-sm">
+              <div
+                key={e.id}
+                className="border rounded-2xl overflow-hidden bg-white shadow-sm"
+              >
                 <div className="relative h-40">
                   <Image
                     src={e.coverImage || "/images/placeholder.jpg"}
@@ -70,11 +90,20 @@ export default function ShowcasePage() {
                 </div>
                 <div className="p-4">
                   <h3 className="text-lg font-semibold">{e.title}</h3>
-                  <p className="text-sm text-gray-600 mt-1">{new Date(e.start).toLocaleString()}</p>
-                  <p className="text-sm text-gray-700 mt-2 line-clamp-3">{e.description}</p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {new Date(e.start).toLocaleString()}
+                  </p>
+                  <p className="text-sm text-gray-700 mt-2 line-clamp-3">
+                    {e.description}
+                  </p>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    {e.tags?.map(t => (
-                      <span key={t} className="text-xs px-2 py-1 bg-gray-100 rounded-full">{t}</span>
+                    {e.tags?.map((t) => (
+                      <span
+                        key={t}
+                        className="text-xs px-2 py-1 bg-gray-100 rounded-full"
+                      >
+                        {t}
+                      </span>
                     ))}
                   </div>
                 </div>
@@ -88,10 +117,15 @@ export default function ShowcasePage() {
       <section className="bg-white border-t">
         <div className="mx-auto max-w-7xl px-6 py-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6">Featured Poojas</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+              Featured Poojas
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {samplePoojas.map((p) => (
-                <div key={p.id} className="border rounded-2xl overflow-hidden bg-white shadow-sm">
+                <div
+                  key={p.id}
+                  className="border rounded-2xl overflow-hidden bg-white shadow-sm"
+                >
                   <div className="relative h-40">
                     <Image
                       src={p.image || "/images/placeholder.jpg"}
@@ -102,11 +136,17 @@ export default function ShowcasePage() {
                   </div>
                   <div className="p-4">
                     <h3 className="text-lg font-semibold">{p.name}</h3>
-                    <p className="text-sm text-gray-700 mt-2 line-clamp-3">{p.summary}</p>
+                    <p className="text-sm text-gray-700 mt-2 line-clamp-3">
+                      {p.summary}
+                    </p>
                     <div className="mt-3 flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Duration: {p.durationMins} mins</span>
+                      <span className="text-sm text-gray-600">
+                        Duration: {p.durationMins} mins
+                      </span>
                       {p.suggestedDonation && (
-                        <span className="text-sm font-medium">{p.suggestedDonation}</span>
+                        <span className="text-sm font-medium">
+                          {p.suggestedDonation}
+                        </span>
                       )}
                     </div>
                   </div>
@@ -116,9 +156,11 @@ export default function ShowcasePage() {
           </div>
           <div className="lg:col-span-1">
             <div className="sticky top-6">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Quick Booking</h2>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+                Quick Booking
+              </h2>
               <div className="border rounded-2xl p-4 bg-gray-50">
-                {/* Pass the required eventType prop */}
+                {/* BookingWidget requires an eventType */}
                 <BookingWidget eventType="pooja" />
               </div>
             </div>
@@ -130,8 +172,8 @@ export default function ShowcasePage() {
       <section className="bg-gray-50 border-t">
         <div className="mx-auto max-w-7xl px-6 py-12">
           <h2 className="text-2xl font-semibold text-gray-900 mb-6">Calendar</h2>
-          {/* EventCalendar expects an `events` prop */}
-          <EventCalendar events={sampleEvents} />
+          {/* EventCalendar expects events shaped as [{ attributes: EventAttributes }] */}
+          <EventCalendar events={calendarEvents} />
         </div>
       </section>
     </main>
